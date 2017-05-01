@@ -1,0 +1,63 @@
+buildscript {
+    ext.SPRING_BOOT_VERSION = "1.5.3.RELEASE"
+    ext.KOTLIN_VERSION = "1.1.2-2"
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { setUrl("https://oss.sonatype.org/content/repositories/snapshots") }
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$SPRING_BOOT_VERSION")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:$KOTLIN_VERSION")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:$KOTLIN_VERSION")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION")
+    }
+}
+
+ext.VERSION = "0.0.1-SNAPSHOT"
+ext.JUNIT_JUPITER_VERSION = "5.0.0-SNAPSHOT"
+ext.JUNIT_PLATFORM_VERSION = "1.0.0-SNAPSHOT"
+ext.ASSERTJ_CORE_VERSION = "3.6.2"
+ext.SWAGGER = "2.6.1"
+
+apply plugin: "kotlin"
+apply plugin: "kotlin-spring"
+apply plugin: "kotlin-jpa"
+apply plugin: "org.springframework.boot"
+apply plugin: "application"
+apply plugin: "idea"
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { setUrl("https://oss.sonatype.org/content/repositories/snapshots") }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("com.h2database:h2")
+
+    compile("org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION")
+    compile("org.jetbrains.kotlin:kotlin-reflect:$KOTLIN_VERSION")
+    compile("io.springfox:springfox-swagger2:$SWAGGER")
+    compile("io.springfox:springfox-swagger-ui:$SWAGGER")
+
+    compile("org.zalando:problem-spring-web:0.18.0")
+
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.8.8")
+
+    testCompile("org.junit.jupiter:junit-jupiter-api:$JUNIT_JUPITER_VERSION")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:$JUNIT_JUPITER_VERSION")
+    testCompile("org.junit.platform:junit-platform-runner:$JUNIT_PLATFORM_VERSION")
+    testCompile("org.assertj:assertj-core:$ASSERTJ_CORE_VERSION")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "3.5"
+}
