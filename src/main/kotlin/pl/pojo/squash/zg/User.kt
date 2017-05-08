@@ -6,6 +6,7 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-data class User(@Id @Email @Column(unique = true) val email: String,
+data class User(@Id @field:Email @Column(unique = true) val email: String,
+                val phoneNumber: String? = null,
                 val firstName: String? = null,
                 val lastName: String? = null)

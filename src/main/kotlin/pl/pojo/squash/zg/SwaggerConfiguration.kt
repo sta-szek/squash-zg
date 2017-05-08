@@ -15,9 +15,10 @@ class SwaggerConfiguration {
 
     @Bean
     fun swaggerDocket() = Docket(DocumentationType.SWAGGER_2)
+            .useDefaultResponseMessages(false)
             .select()
             .apis(RequestHandlerSelectors.any())
-            .paths(PathSelectors.regex("/users.*"))
+            .paths(PathSelectors.regex("/users*"))
             .build()!!
 
 }
