@@ -14,6 +14,9 @@ buildscript {
     }
 }
 
+group = 'pl.pojo'
+version = '0.0.1-SNAPSHOT'
+
 ext.VERSION = "0.0.1-SNAPSHOT"
 ext.JUNIT_JUPITER_VERSION = "5.0.0-SNAPSHOT"
 ext.JUNIT_PLATFORM_VERSION = "1.0.0-SNAPSHOT"
@@ -27,7 +30,6 @@ apply plugin: "org.springframework.boot"
 apply plugin: "application"
 apply plugin: "idea"
 
-
 repositories {
     mavenCentral()
     jcenter()
@@ -36,6 +38,7 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.h2database:h2")
 
@@ -54,6 +57,32 @@ dependencies {
     testCompile("org.assertj:assertj-core:$ASSERTJ_CORE_VERSION")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
+}
+
+springBoot {
+    buildInfo()
+}
+
+bootRepackage {
+    mainClass = 'pl.pojo.squash.zg.ApplicationKt'
+}
+
+jar {
+    baseName = "${project.name}"
+    version = project.version
+}
+
+task copyApplicationJar(type: Copy) {
+    from "build/libs/${project.name}-${project.version}.jar"
+    into "docker"
+    rename "${project.name}-${project.version}.jar", "application.jar"
+}
+
+task buildDocker(type: Exec) {
+    dependsOn bootRepackage
+    dependsOn copyApplicationJar
+    workingDir "docker"
+    commandLine "docker build --rm --tag ${project.name}:${project.version} .".split(' ')
 }
 
 task wrapper(type: Wrapper) {
