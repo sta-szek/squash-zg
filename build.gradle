@@ -74,14 +74,14 @@ jar {
 
 task copyApplicationJar(type: Copy) {
     from "build/libs/${project.name}-${project.version}.jar"
-    into "docker"
+    into "src/docker"
     rename "${project.name}-${project.version}.jar", "application.jar"
 }
 
 task buildDocker(type: Exec) {
-    dependsOn bootRepackage
+    dependsOn build
     dependsOn copyApplicationJar
-    workingDir "docker"
+    workingDir "src/docker"
     commandLine "docker build --rm --tag ${project.name}:${project.version} .".split(' ')
 }
 

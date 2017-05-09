@@ -2,7 +2,8 @@ FROM openjdk:latest
 MAINTAINER Piotr Joński p.jonski@pojo.pl
 
 COPY application.jar application.jar
-
+RUN chmod +x application.jar
+RUN ls -al /
 EXPOSE 8080
 
-CMD "java -jar application.jar"
+ENTRYPOINT ["java", "-jar", "application.jar"]
