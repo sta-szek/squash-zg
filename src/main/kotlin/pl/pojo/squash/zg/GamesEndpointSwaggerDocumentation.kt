@@ -5,25 +5,27 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.context.request.async.DeferredResult
+import javax.validation.Valid
 
 @Api(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
         produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-        tags = arrayOf("users")
+        tags = arrayOf("games")
 )
-interface UsersEndpointSwaggerDocumentation {
-
+interface GamesEndpointSwaggerDocumentation {
 
     @ApiResponses(
-            ApiResponse(code = 200, message = "List of users"),
+            ApiResponse(code = 200, message = "List of games"),
             ApiResponse(code = 204, message = "Empty list")
     )
-    fun getAllUsers(): DeferredResult<Iterable<User>>
+    fun getAllGames(): DeferredResult<Iterable<Game>>
 
     @ApiResponses(
-            ApiResponse(code = 201, message = "User created"),
-            ApiResponse(code = 409, message = "User with given email already exist")
+            ApiResponse(code = 201, message = "Game created"),
+            ApiResponse(code = 409, message = "?? user does not exist / game exist?")
     )
-    fun createUser(@RequestBody user: User): DeferredResult<User>
+    fun createNewGameFor(@RequestBody @Valid createGameBody: CreateGameBody): DeferredResult<Game>
 }

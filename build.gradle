@@ -49,7 +49,10 @@ dependencies {
 
     compile("org.zalando:problem-spring-web:0.18.0")
 
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.8")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.8")
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.8.8")
+    compile("com.fasterxml.jackson.module:jackson-module-parameter-names:2.8.8")
 
     testCompile("org.junit.jupiter:junit-jupiter-api:$JUNIT_JUPITER_VERSION")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$JUNIT_JUPITER_VERSION")

@@ -13,13 +13,13 @@ import java.util.concurrent.CompletableFuture
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/users")
-class UsersEndpoint(val usersRepository: UsersRepository) : UsersEndpointSwaggerDocumentation {
+@RequestMapping("/games")
+class GamesEndpoint(val gamesService: GamesService) : GamesEndpointSwaggerDocumentation {
 
     @GetMapping(produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
-    override fun getAllUsers(): DeferredResult<Iterable<User>> {
-        val deferredResult = DeferredResult<Iterable<User>>()
-        CompletableFuture.supplyAsync(usersRepository::findAll).whenCompleteAsync({ result, _ ->
+    override fun getAllGames(): DeferredResult<Iterable<Game>> {
+        val deferredResult = DeferredResult<Iterable<Game>>()
+        CompletableFuture.supplyAsync(gamesService::getAll).whenCompleteAsync({ result, _ ->
             deferredResult.setResult(result)
         })
         return deferredResult
@@ -29,16 +29,16 @@ class UsersEndpoint(val usersRepository: UsersRepository) : UsersEndpointSwagger
             consumes = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE),
             produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
     @ResponseStatus(HttpStatus.CREATED)
-    override fun createUser(@RequestBody @Valid user: User): DeferredResult<User> {
-        if (usersRepository.exists(user.email)) {
-            throw UserAlreadyExistException()
-        }
-        val deferredResult = DeferredResult<User>()
-        CompletableFuture.supplyAsync({ usersRepository.save(user) }).whenCompleteAsync({ result, _ ->
+    override fun createNewGameFor(@RequestBody @Valid createGameBody: CreateGameBody): DeferredResult<Game> {
+        val deferredResult = DeferredResult<Game>()
+        CompletableFuture.supplyAsync({ gamesService.createNewGameFor(createGameBody.getGame(), createGameBody.userEmail) }).whenCompleteAsync({ result, _ ->
             deferredResult.setResult(result)
         })
         return deferredResult
     }
 }
+
+
+
 
 

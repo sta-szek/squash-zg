@@ -1,5 +1,6 @@
 package pl.pojo.squash.zg.configuration
 
+import com.google.common.base.Predicates
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.PathSelectors
@@ -18,7 +19,7 @@ class SwaggerConfiguration {
             .useDefaultResponseMessages(false)
             .select()
             .apis(RequestHandlerSelectors.any())
-            .paths(PathSelectors.regex("/users*"))
+            .paths(Predicates.or(PathSelectors.regex("/games*"), PathSelectors.regex("/users*")))
             .build()!!
 
 }
