@@ -17,8 +17,8 @@ import javax.validation.Valid
 class UsersEndpoint(val usersRepository: UsersRepository) : UsersEndpointSwaggerDocumentation {
 
     @GetMapping(produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
-    override fun getAllUsers(): DeferredResult<Iterable<User>> {
-        val deferredResult = DeferredResult<Iterable<User>>()
+    override fun getAllUsers(): DeferredResult<Iterable<UserEntity>> {
+        val deferredResult = DeferredResult<Iterable<UserEntity>>()
         CompletableFuture.supplyAsync(usersRepository::findAll).whenCompleteAsync({ result, _ ->
             deferredResult.setResult(result)
         })
@@ -29,12 +29,12 @@ class UsersEndpoint(val usersRepository: UsersRepository) : UsersEndpointSwagger
             consumes = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE),
             produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
     @ResponseStatus(HttpStatus.CREATED)
-    override fun createUser(@RequestBody @Valid user: User): DeferredResult<User> {
-        if (usersRepository.exists(user.email)) {
+    override fun createUser(@RequestBody @Valid createUserBody: CreateUserBody): DeferredResult<UserEntity> {
+        if (usersRepository.findUserByEmail(createUserBody.email).isPresent) {
             throw UserAlreadyExistException()
         }
-        val deferredResult = DeferredResult<User>()
-        CompletableFuture.supplyAsync({ usersRepository.save(user) }).whenCompleteAsync({ result, _ ->
+        val deferredResult = DeferredResult<UserEntity>()
+        CompletableFuture.supplyAsync({ usersRepository.save(createUserBody.toUser()) }).whenCompleteAsync({ result, _ ->
             deferredResult.setResult(result)
         })
         return deferredResult

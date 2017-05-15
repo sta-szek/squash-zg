@@ -8,6 +8,8 @@ import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
+import java.time.LocalDate
+import java.time.LocalTime
 
 
 @EnableSwagger2
@@ -16,6 +18,8 @@ class SwaggerConfiguration {
 
     @Bean
     fun swaggerDocket() = Docket(DocumentationType.SWAGGER_2)
+            .directModelSubstitute(LocalDate::class.java, String::class.java)
+            .directModelSubstitute(LocalTime::class.java, String::class.java)
             .useDefaultResponseMessages(false)
             .select()
             .apis(RequestHandlerSelectors.any())

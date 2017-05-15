@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service
 @Service
 class GamesService(val gameRepository: GameRepository, val usersRepository: UsersRepository) {
 
-    fun getAll(): Iterable<Game> = gameRepository.findAll()
+    fun getAll(): Iterable<GameEntity> = gameRepository.findAll()
 
-    fun createNewGameFor(game: Game, userEmail: String): Game {
-        val user = usersRepository.findOne(userEmail)
-        if(user==null) {
+    fun createNewGameFor(game: GameEntity, userId: Long): GameEntity {
+        val user = usersRepository.findOne(userId)
+        if (!user.isPresent) {
             throw UserNotExistException()
         } else {
-            game.user = user
+            game.userEntity = user.get()
             return gameRepository.save(game)
         }
     }

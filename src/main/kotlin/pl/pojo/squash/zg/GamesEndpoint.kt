@@ -17,8 +17,8 @@ import javax.validation.Valid
 class GamesEndpoint(val gamesService: GamesService) : GamesEndpointSwaggerDocumentation {
 
     @GetMapping(produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
-    override fun getAllGames(): DeferredResult<Iterable<Game>> {
-        val deferredResult = DeferredResult<Iterable<Game>>()
+    override fun getAllGames(): DeferredResult<Iterable<GameEntity>> {
+        val deferredResult = DeferredResult<Iterable<GameEntity>>()
         CompletableFuture.supplyAsync(gamesService::getAll).whenCompleteAsync({ result, _ ->
             deferredResult.setResult(result)
         })
@@ -29,9 +29,9 @@ class GamesEndpoint(val gamesService: GamesService) : GamesEndpointSwaggerDocume
             consumes = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE),
             produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
     @ResponseStatus(HttpStatus.CREATED)
-    override fun createNewGameFor(@RequestBody @Valid createGameBody: CreateGameBody): DeferredResult<Game> {
-        val deferredResult = DeferredResult<Game>()
-        CompletableFuture.supplyAsync({ gamesService.createNewGameFor(createGameBody.getGame(), createGameBody.userEmail) }).whenCompleteAsync({ result, _ ->
+    override fun createNewGameFor(@RequestBody @Valid createGameBody: CreateGameBody): DeferredResult<GameEntity> {
+        val deferredResult = DeferredResult<GameEntity>()
+        CompletableFuture.supplyAsync({ gamesService.createNewGameFor(createGameBody.toGame(), createGameBody.userId) }).whenCompleteAsync({ result, _ ->
             deferredResult.setResult(result)
         })
         return deferredResult

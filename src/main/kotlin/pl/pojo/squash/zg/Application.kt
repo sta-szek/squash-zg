@@ -8,5 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class Application
 
 fun main(args: Array<String>) {
-    SpringApplication.run(Application::class.java, *args)
+    val run = SpringApplication.run(Application::class.java, *args)
+
+    val bean = run.getBean ("usersRepository") as UsersRepository
+    bean.save(UserEntity(0,"p.jonski@pojo.pl"))
+    bean.save(UserEntity(0,"p.joski@pojo.pl"))
+    bean.save(UserEntity(0,"p.jski@pojo.pl"))
+
 }
