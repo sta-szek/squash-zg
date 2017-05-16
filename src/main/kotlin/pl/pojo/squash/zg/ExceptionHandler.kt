@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.NativeWebRequest
 import org.zalando.problem.Problem
 import org.zalando.problem.spring.web.advice.ProblemHandling
+import pl.pojo.squash.zg.service.UserAlreadyExistException
 import javax.ws.rs.core.Response
 
 

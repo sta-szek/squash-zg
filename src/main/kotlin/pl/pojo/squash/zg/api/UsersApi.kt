@@ -1,4 +1,4 @@
-package pl.pojo.squash.zg
+package pl.pojo.squash.zg.api
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -9,19 +9,23 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.async.DeferredResult
-import java.util.concurrent.CompletableFuture
+import pl.pojo.squash.zg.model.User
+import pl.pojo.squash.zg.service.UsersService
+import java.util.concurrent.CompletableFuture.supplyAsync
 import javax.validation.Valid
 
+
 @RestController
-@RequestMapping("/games")
-class GamesEndpoint(val gamesService: GamesService) : GamesEndpointSwaggerDocumentation {
+@RequestMapping("/users")
+class UsersApi(val usersService: UsersService) : UsersApiDoc {
 
     @GetMapping(produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
-    override fun getAllGames(): DeferredResult<Iterable<GameEntity>> {
-        val deferredResult = DeferredResult<Iterable<GameEntity>>()
-        CompletableFuture.supplyAsync(gamesService::getAll).whenCompleteAsync({ result, _ ->
-            deferredResult.setResult(result)
-        })
+    override fun getAllUsers(): DeferredResult<Iterable<User>> {
+        val deferredResult = DeferredResult<Iterable<User>>()
+
+        supplyAsync(usersService::getAll)
+                .whenCompleteAsync({ result, _ -> deferredResult.setResult(result) })
+
         return deferredResult
     }
 
@@ -29,16 +33,12 @@ class GamesEndpoint(val gamesService: GamesService) : GamesEndpointSwaggerDocume
             consumes = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE),
             produces = arrayOf(MediaType.APPLICATION_JSON_UTF8_VALUE))
     @ResponseStatus(HttpStatus.CREATED)
-    override fun createNewGameFor(@RequestBody @Valid createGameBody: CreateGameBody): DeferredResult<GameEntity> {
-        val deferredResult = DeferredResult<GameEntity>()
-        CompletableFuture.supplyAsync({ gamesService.createNewGameFor(createGameBody.toGame(), createGameBody.userId) }).whenCompleteAsync({ result, _ ->
-            deferredResult.setResult(result)
-        })
+    override fun createUser(@RequestBody @Valid createUserBody: CreateUserBody): DeferredResult<User> {
+        val deferredResult = DeferredResult<User>()
+        supplyAsync({ usersService.save(createUserBody.toUser()) })
+                .whenCompleteAsync({ result, _ -> deferredResult.setResult(result) })
         return deferredResult
     }
 }
-
-
-
 
 

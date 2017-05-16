@@ -1,4 +1,4 @@
-package pl.pojo.squash.zg
+package pl.pojo.squash.zg.model
 
 
 enum class Level {
